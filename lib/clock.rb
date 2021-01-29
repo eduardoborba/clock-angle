@@ -5,9 +5,16 @@ class Clock
   end
 
   def calculate_angle
-    angle = (hours_angle - minutes_angle).abs
+    angle_object = Angle.find_by(hours: @hours, minutes: @minutes)
+    
+    if angle_object.present?
+      return angle_object.angle
+    end
 
-    angle > 180 ? 360 - angle : angle
+    angle = (hours_angle - minutes_angle).abs
+    angle = 360 - angle if angle > 180
+    Angle.create!(hours: @hours, minutes: @minutes, angle: angle)
+    angle
   end
 
   private
